@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ff758c, #ff7eb3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.card {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(20px);
+  padding: 60px 90px;
+  border-radius: 28px;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+}
+
+h1 {
+  color: white;
+  font-size: 42px;
+}
+
+p {
+  color: white;
+  opacity: 0.9;
+  margin: 15px 0 35px;
+}
+
+/* BUTTON AREA */
+.buttons {
+  position: relative;
+  width: 460px;
+  height: 160px;
+  margin: auto;
+}
+
+/* COMMON BUTTON */
+button {
+  width: 150px;
+  height: 55px;
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+}
+
+/* YES */
+#yes {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  color: white;
+  cursor: pointer;
+  z-index: 1;
+  box-shadow: 0 10px 30px rgba(255,75,43,0.6);
+  transition: transform 0.25s ease;
+}
+
+#yes:hover {
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* NO */
+#no {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  color: #ff416c;
+  pointer-events: none; /* never clickable */
+  z-index: 2;           /* blocks click-through */
+}
+
+/* FUNNY NOTE */
+.note {
+  margin-top: 18px;
+  font-size: 14px;
+  color: white;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+/* RESULT */
+.result {
+  display: none;
+  flex-direction: column;
+  text-align: center;
+}
+
+.result img {
+  width: 320px;
+  border-radius: 20px;
+  margin-bottom: 25px;
+}
+
+.result h1 {
+  color: white;
+  font-size: 46px;
+}
+
+/* HEARTS */
+.hearts {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  font-size: 24px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(120vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Will You Be My Valentine? 💖</h1>
+  <p>You already know the answer 😌</p>
+
+  <div class="buttons" id="arena">
+    <button id="yes">Yes 💕</button>
+    <button id="no">No 🙃</button>
+  </div>
+
+  <div class="note">
+    *The “No” button gets nervous when you come close 🫣*
+  </div>
+</div>
+
+<div class="result" id="result">
+  <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2R6cWJ2eG1oZ2V3d2Z5N2FjNWl1dWZzNnR4Y2RkZ2RzbiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/gnXG2hODaCOru/giphy.gif" alt="Cute romantic hug">
+  <h1>Yay 💘</h1>
+  <p style="color:white;font-size:18px;">i knew it ma'am 🥰</p>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<script>
+const noBtn = document.getElementById("no");
+const arena = document.getElementById("arena");
+const yesBtn = document.getElementById("yes");
+
+/* Move NO only when cursor is near */
+arena.addEventListener("mousemove", (e) => {
+  const rect = noBtn.getBoundingClientRect();
+  const btnX = rect.left + rect.width / 2;
+  const btnY = rect.top + rect.height / 2;
+
+  const dx = Math.abs(e.clientX - btnX);
+  const dy = Math.abs(e.clientY - btnY);
+
+  if (dx < 120 && dy < 70) {
+    moveNo();
+  }
+});
+
+function moveNo() {
+  const arenaW = arena.clientWidth;
+  const arenaH = arena.clientHeight;
+
+  const minX = arenaW / 2 + 30; // keep away from YES
+  const maxX = arenaW - noBtn.offsetWidth - 10;
+
+  const minY = 20;
+  const maxY = arenaH - noBtn.offsetHeight - 20;
+
+  const x = minX + Math.random() * (maxX - minX);
+  const y = minY + Math.random() * (maxY - minY);
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+/* YES click */
+yesBtn.addEventListener("click", () => {
+  card.style.display = "none";
+  result.style.display = "flex";
+  releaseHearts();
+});
+
+function releaseHearts() {
+  for (let i = 0; i < 60; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.innerHTML = "💖";
+    h.style.left = Math.random() * 100 + "vw";
+    h.style.animationDuration = 2 + Math.random() * 3 + "s";
+    hearts.appendChild(h);
+    setTimeout(() => h.remove(), 5000);
+  }
+}
+</script>
+
+</body>
+</html>
